@@ -19,7 +19,7 @@ export class Player extends Component {
     }
 
     public initialize (camera: Camera): void {
-
+        this.mainCamera = camera
     }
 
     start() {
@@ -32,11 +32,21 @@ export class Player extends Component {
     }
 
 
-    public processKeyDown(event: EventKeyboard): void { }
-    public processKeyUp(event: EventKeyboard): void { }
-    public processMouseMove(event: EventMouse): void { }
-    public processMouseDown(event: EventMouse): void { }
-    public processMouseUp(event: EventMouse): void { }
+    public processKeyDown(event: EventKeyboard): void { 
+        if (this.inputSystem) this.inputSystem.handleKeyDown(event);
+    }
+    public processKeyUp(event: EventKeyboard): void { 
+        if (this.inputSystem) this.inputSystem.handleKeyUp(event);
+    }
+    public processMouseMove(event: EventMouse): void { 
+        if (this.inputSystem) this.inputSystem.handleMouseMove(event);
+    }
+    public processMouseDown(event: EventMouse): void { 
+        if (this.inputSystem) this.inputSystem.handleMouseDown(event);
+    }
+    public processMouseUp(event: EventMouse): void { 
+        if (this.inputSystem) this.inputSystem.handleMouseUp(event);
+    }
 }
 
 
