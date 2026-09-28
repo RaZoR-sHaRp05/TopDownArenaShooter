@@ -1,7 +1,8 @@
-import { _decorator, Camera, Component, EventKeyboard, EventMouse, Node } from 'cc';
+import { _decorator, Camera, Component, EventKeyboard, EventMouse, Node, Prefab } from 'cc';
 import { PlayerInput } from './PlayerInput';
 import { PlayerMovement } from './PlayerMovement';
 import { PlayerWeapon } from './PlayerWeapon';
+import { WeaponConfig } from './WeaponConfig';
 const { ccclass, property } = _decorator;
 
 @ccclass('Player')
@@ -22,6 +23,13 @@ export class Player extends Component {
         this.mainCamera = camera
     }
 
+
+    public initializeWeapon(config: WeaponConfig, bulletPrefab: Prefab, bulletContainer: Node) {
+        if (this.weaponSystem) {
+            this.weaponSystem.equipWeapon(config, bulletPrefab, bulletContainer, this.node);
+        }
+    }
+
     start() {
 
     }
@@ -31,6 +39,11 @@ export class Player extends Component {
         if (this.inputSystem && this.movementSystem) {
             let moveDir = this.inputSystem.getMoveDirection()
             this.movementSystem.updateMovement(moveDir);
+        }
+
+        if (this.inputSystem && this.weaponSystem) {
+            let isFiring = this.inputSystem.isShooting;
+            this.weaponSystem.processFiring(isFiring, this.node.angle)
         }
     }
 
@@ -49,6 +62,7 @@ export class Player extends Component {
     }
     public processMouseDown(event: EventMouse): void { 
         if (this.inputSystem) this.inputSystem.handleMouseDown(event);
+        if (this.weaponSystem) this.weaponSystem.triggerSingleShot(this.node.angle);
     }
     public processMouseUp(event: EventMouse): void { 
         if (this.inputSystem) this.inputSystem.handleMouseUp(event);
